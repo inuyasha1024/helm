@@ -1,0 +1,61 @@
+# Default values for sams-catalog-service
+# Declare variables to be passed into your templates
+
+
+namespace: catalog-services-api-dev #pass from CL
+env: dev #pass from CL
+region: "centralus" #pass from CL
+  
+grpc:
+  replicaCount: 1
+  appname: c7-service-dev #pass from CL
+  
+
+filter:
+  name: envoy-proxy
+  file: descriptor_set.pb
+     
+     
+hpa:
+  minReplicas: 1 #pass from CL
+  maxReplicas: 6  #pass from CL
+  cpuAverageUtilization: 70
+  memoryAverageUtilization: 70     
+                       
+image:
+  tag: samscontainerregistry.azurecr.io/nerds/c7-services/c7-services-api:0.0.18-SNAPSHOT #pass from CL
+  pullPolicy: IfNotPresent
+  
+kv:
+  url: "https://sams-catalog-kv-nonprod.vault.azure.net/"
+  clientId: "1cc58421-c08a-4cfb-869c-90cfafe9abd3"
+  clientKey: "" #pass from CL
+  secret: sams-catalog-service-secret-nonprod
+
+storage:
+  secret: azure-secret
+  name: samscatalogsrvstorage
+  key: ""  #pass from CL
+  shareName: descriptor-set-dev # pass from CL
+  volume: azurestorage
+  mount: /etc/filterfiles
+
+registry:
+  name: samscontainerregistry.azurecr.io
+  username: SamsContainerRegistry
+  password: ""  #pass from CL
+  emailId: vikas.mittal@samsclub.com 
+  secret:  sams-catalog-srv-acr-auth
+
+deploymentStrategy:
+  type: RollingUpdate
+
+resources:
+  limits:
+    cpu: 2
+    memory: 4028M
+  requests:
+    cpu: 0.5 
+    memory: 2048M
+
+
